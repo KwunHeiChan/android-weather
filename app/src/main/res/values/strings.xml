@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AndroidWeather</string>
+    <string name="service_not_supported">Service not supported</string>
+    <string name="no_permission">No permission</string>
+    <string name="location_search">Location Search</string>
+    <string name="history">History</string>
+    <string name="tutorial">New here?\n\nStart by entering a city name in the search box\n\nOr click on the map icon to do a location based search</string>
+    <string name="degree_celsius">%1$d°C</string>
+    <string name="feels_like">Feels like %1$d°C</string>
+</resources>

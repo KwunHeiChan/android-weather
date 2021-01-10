@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="ContentDescription"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <TextView
+        android:id="@+id/tvCityName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_m"
+        android:layout_marginTop="@dimen/spacing_m"
+        android:layout_marginEnd="@dimen/spacing_m"
+        android:gravity="center"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/text_l"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Hong Kong" />
+
+    <ImageView
+        android:id="@+id/ivWeather"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/icon_l"
+        android:layout_marginStart="@dimen/spacing_m"
+        android:layout_marginTop="@dimen/spacing_s"
+        android:adjustViewBounds="true"
+        app:layout_constraintEnd_toStartOf="@+id/tvWeatherDescription"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCityName"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/tvWeatherDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_m"
+        android:gravity="center"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/text_m"
+        app:layout_constraintBottom_toBottomOf="@+id/ivWeather"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ivWeather"
+        app:layout_constraintTop_toTopOf="@+id/ivWeather"
+        tools:text="Few clouds" />
+
+    <TextView
+        android:id="@+id/tvTemp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_m"
+        android:layout_marginTop="@dimen/spacing_s"
+        android:layout_marginEnd="@dimen/spacing_m"
+        android:gravity="center"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/text_xl"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivWeather"
+        tools:text="6°C" />
+
+    <TextView
+        android:id="@+id/tvFeelsLike"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_m"
+        android:layout_marginTop="@dimen/spacing_s"
+        android:layout_marginEnd="@dimen/spacing_m"
+        android:gravity="center"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="@dimen/text_m"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTemp"
+        tools:text="Feels like 1°C" />
+
+    <TextView
+        android:id="@+id/tvHighTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_m"
+        android:layout_marginTop="@dimen/spacing_m"
+        android:layout_marginBottom="@dimen/spacing_m"
+        android:textColor="?android:textColorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvLowTemp"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvFeelsLike"
+        tools:text="6°C" />
+
+    <TextView
+        android:id="@+id/tvLowTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_m"
+        android:layout_marginEnd="@dimen/spacing_m"
+        android:textColor="?android:textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvHighTemp"
+        app:layout_constraintTop_toTopOf="@+id/tvHighTemp"
+        tools:text="1°C" />
+
+    <ImageView
+        android:id="@+id/ivHighTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_xs"
+        app:layout_constraintBottom_toBottomOf="@id/tvHighTemp"
+        app:layout_constraintEnd_toStartOf="@+id/tvHighTemp"
+        app:layout_constraintTop_toTopOf="@id/tvHighTemp"
+        app:srcCompat="@android:drawable/arrow_up_float"
+        app:tint="@android:color/holo_green_dark" />
+
+    <ImageView
+        android:id="@+id/ivLowTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_xs"
+        app:layout_constraintBottom_toBottomOf="@id/tvLowTemp"
+        app:layout_constraintStart_toEndOf="@id/tvLowTemp"
+        app:layout_constraintTop_toTopOf="@id/tvLowTemp"
+        app:srcCompat="@android:drawable/arrow_down_float"
+        app:tint="@android:color/holo_red_dark" />
+
+</merge>
