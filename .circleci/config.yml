@@ -1,0 +1,31 @@
+version: 2
+
+cache_key: &cache_key
+    key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+
+jobs:
+    build:
+        working_directory: ~/AndroidWeather
+        docker:
+            - image: circleci/android:api-30
+        environment:
+            JVM_OPTS: -Xmx3200m
+        steps:
+            - checkout
+            - restore_cache:
+                <<: *cache_key
+            - run:
+                name: Download Dependencies
+                command: ./gradlew androidDependencies
+            - save_cache:
+                paths:
+                - ~/.gradle
+                <<: *cache_key
+            - run:
+                name: Run Tests
+                command: ./gradlew lintAustraliaDebug testAustraliaDebug lintCanadaDebug testCanadaDebug
+            - store_artifacts: # for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+                path: app/build/reports
+                destination: reports
+            - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+                path: app/build/test-results
