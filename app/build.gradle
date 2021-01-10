@@ -44,6 +44,25 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    flavorDimensions "country"
+
+    productFlavors {
+        australia {
+            dimension "country"
+            applicationIdSuffix ".au"
+            resValue "string", "app_name", "My Aussie Weather"
+            resValue "color", "primary", "#9C27B0"
+            resValue "color", "primaryVariant", "#7B1FA2"
+        }
+        canada {
+            dimension "country"
+            applicationIdSuffix ".ca"
+            resValue "string", "app_name", "My Eh Weather"
+            resValue "color", "primary", "#4CAF50"
+            resValue "color", "primaryVariant", "#388E3C"
+        }
+    }
 }
 
 dependencies {
