@@ -1,5 +1,5 @@
 # AndroidAppStore
-Android App Store demo using iTunes RSS feed API and MVI architecture
+Android weather demo app using OpenWeatherMap API and MVI architecture
 
 ### Architecture
 This project is based on the MVI(Model-View-Intent) architecture, here are some useful resources for you to better understand the architecture:
