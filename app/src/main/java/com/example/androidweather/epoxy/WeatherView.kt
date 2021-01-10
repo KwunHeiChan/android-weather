@@ -9,6 +9,7 @@ import com.airbnb.epoxy.ModelView
 import com.airbnb.epoxy.TextProp
 import com.bumptech.glide.Glide
 import com.example.androidweather.databinding.ViewWeatherBinding
+import com.example.androidweather.util.KeyedListener
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class WeatherView @JvmOverloads constructor(
@@ -54,5 +55,22 @@ class WeatherView @JvmOverloads constructor(
   @TextProp
   fun setLowTemp(lowTemperature: CharSequence) {
     binding.tvLowTemp.text = lowTemperature
+  }
+
+  @TextProp
+  fun setTempFormat(tempFormat: CharSequence) {
+    binding.tvTempFormat.text = tempFormat
+  }
+
+  @ModelProp
+  fun setIsTempFormatChecked(isTempFormChecked: Boolean) {
+    binding.sTempFormat.isChecked = isTempFormChecked
+  }
+
+  @ModelProp(ModelProp.Option.NullOnRecycle)
+  fun setTempFormatKeyedOnChangeListener(listener: KeyedListener<*, (Boolean) -> Unit>?) {
+    binding.vTempFormat.setOnClickListener {
+      listener?.callback?.invoke(binding.sTempFormat.isChecked)
+    }
   }
 }

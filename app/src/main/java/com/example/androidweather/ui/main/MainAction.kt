@@ -2,6 +2,8 @@ package com.example.androidweather.ui.main
 
 sealed class MainAction {
 
+  data class ChangeTempFormatAction(val isChecked: Boolean) : MainAction()
+
   object DismissErrorAction : MainAction()
 
   object GetHistoryAction : MainAction()

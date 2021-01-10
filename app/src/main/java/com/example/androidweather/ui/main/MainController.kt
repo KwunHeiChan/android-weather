@@ -4,8 +4,16 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.example.androidweather.R
 import com.example.androidweather.epoxy.tutorialView
 import com.example.androidweather.epoxy.weatherView
+import com.example.androidweather.util.KeyedListener
+import com.jakewharton.rxrelay3.PublishRelay
 
 class MainController : TypedEpoxyController<List<MainControllerItem>>() {
+
+  /**
+   * The [PublishRelay] of delete city button click listener, which passes the city ID
+   * [Int] for subscription outside
+   */
+  val tempFormatChangeRelay: PublishRelay<Boolean> = PublishRelay.create<Boolean>()
 
   override fun buildModels(data: List<MainControllerItem>?) {
     data?.forEach { controllerItem ->
@@ -21,10 +29,20 @@ class MainController : TypedEpoxyController<List<MainControllerItem>>() {
             cityName(controllerItem.cityName)
             weatherIconUrl(controllerItem.weatherIconUrl)
             weatherDescription(controllerItem.weatherDescription)
-            temp(R.string.degree_celsius, controllerItem.temp)
-            feelsLike(R.string.feels_like, controllerItem.feelsLike)
-            highTemp(R.string.degree_celsius, controllerItem.highTemp)
-            lowTemp(R.string.degree_celsius, controllerItem.lowTemp)
+            temp(controllerItem.tempStringResource, controllerItem.temp)
+            feelsLike(controllerItem.feelsLikeStringResource, controllerItem.feelsLike)
+            highTemp(controllerItem.highTempStringResource, controllerItem.highTemp)
+            lowTemp(controllerItem.lowTempStringResource, controllerItem.lowTemp)
+            tempFormat(controllerItem.tempFormatStringResource)
+            isTempFormatChecked(controllerItem.isTempFormatChecked)
+            tempFormatKeyedOnChangeListener(
+              KeyedListener.create(
+                Unit,
+                { isChecked ->
+                  tempFormatChangeRelay.accept(isChecked)
+                }
+              )
+            )
           }
         }
       }
