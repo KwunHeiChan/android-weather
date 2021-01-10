@@ -4,6 +4,10 @@
     <string name="location_search">Location Search</string>
     <string name="history">History</string>
     <string name="tutorial">New here?\n\nStart by entering a city name in the search box\n\nOr click on the map icon to do a location based search</string>
-    <string name="degree_celsius">%1$d°C</string>
-    <string name="feels_like">Feels like %1$d°C</string>
+    <string name="degree_celsius">°C</string>
+    <string name="degree_fahrenheit">°F</string>
+    <string name="temperature_degree_celsius">%1$d°C</string>
+    <string name="temperature_degree_fahrenheit">%1$d°F</string>
+    <string name="feels_like_degree_celsius">Feels like %1$d°C</string>
+    <string name="feels_like_degree_fahrenheit">Feels like %1$d°F</string>
 </resources>

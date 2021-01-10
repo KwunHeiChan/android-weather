@@ -61,6 +61,9 @@ class MainViewModel(
    */
   private fun actionFromIntent(mainIntent: MainIntent): MainAction {
     return when (mainIntent) {
+      is MainIntent.ChangeTempFormatIntent -> {
+        MainAction.ChangeTempFormatAction(mainIntent.isChecked)
+      }
       is MainIntent.DismissErrorIntent -> {
         MainAction.DismissErrorAction
       }

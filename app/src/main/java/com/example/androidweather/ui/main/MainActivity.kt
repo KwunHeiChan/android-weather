@@ -95,6 +95,7 @@ class MainActivity : DaggerAppCompatActivity(), MviView<MainIntent, MainViewStat
    * Merge all [MviIntent]s to be processed by [MviViewModel]
    */
   override fun intents(): Observable<MainIntent> = Observable.mergeArray(
+    changeTempFormatIntent(),
     dismissErrorIntent(),
     hideKeyboardIntent(),
     initialIntent(),
@@ -145,6 +146,9 @@ class MainActivity : DaggerAppCompatActivity(), MviView<MainIntent, MainViewStat
 
     binding.recyclerView.setController(controller)
   }
+
+  private fun changeTempFormatIntent(): Observable<MainIntent.ChangeTempFormatIntent> =
+    controller.tempFormatChangeRelay.map { MainIntent.ChangeTempFormatIntent(it) }
 
   private fun dismissErrorIntent(): Observable<MainIntent.DismissErrorIntent> =
     snackbar.dismisses().map { MainIntent.DismissErrorIntent }

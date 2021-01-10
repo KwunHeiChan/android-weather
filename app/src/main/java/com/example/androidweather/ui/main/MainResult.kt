@@ -4,6 +4,8 @@ import com.example.androidweather.model.GetWeatherResponse
 
 sealed class MainResult {
 
+  data class ChangeTempFormatResult(val isChecked: Boolean) : MainResult()
+
   object DismissErrorResult : MainResult()
 
   sealed class GetHistoryResult : MainResult() {

@@ -92,7 +92,6 @@
         android:layout_marginTop="@dimen/spacing_m"
         android:layout_marginBottom="@dimen/spacing_m"
         android:textColor="?android:textColorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tvLowTemp"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -134,5 +133,56 @@
         app:layout_constraintTop_toTopOf="@id/tvLowTemp"
         app:srcCompat="@android:drawable/arrow_down_float"
         app:tint="@android:color/holo_red_dark" />
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/spacing_m"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivLowTemp" />
+
+    <TextView
+        android:id="@+id/tvTempFormat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_m"
+        android:layout_marginTop="@dimen/spacing_m"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="@dimen/text_m"
+        app:layout_constraintEnd_toStartOf="@id/sTempFormat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider1"
+        tools:text="@string/degree_celsius" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/sTempFormat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_m"
+        android:clickable="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+    <View
+        android:id="@+id/vTempFormat"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/sTempFormat"
+        app:layout_constraintEnd_toEndOf="@id/sTempFormat"
+        app:layout_constraintStart_toStartOf="@id/sTempFormat"
+        app:layout_constraintTop_toTopOf="@id/sTempFormat" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/spacing_m"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTempFormat" />
 
 </merge>

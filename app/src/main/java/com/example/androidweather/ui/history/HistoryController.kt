@@ -11,7 +11,7 @@ class HistoryController : TypedEpoxyController<List<HistoryControllerItem>>() {
    * The [PublishRelay] of delete city button click listener, which passes the city ID
    * [Int] for subscription outside
    */
-  val btnRemoveClickRelay = PublishRelay.create<Int>()
+  val btnRemoveClickRelay: PublishRelay<Int> = PublishRelay.create<Int>()
 
   override fun buildModels(data: List<HistoryControllerItem>?) {
     data?.forEach { controllerItem ->

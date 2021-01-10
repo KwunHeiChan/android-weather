@@ -15,6 +15,7 @@ import com.example.androidweather.repository.LocationRepository
 import com.example.androidweather.repository.SearchHistoryRepository
 import com.example.androidweather.repository.WeatherRepository
 import com.example.androidweather.util.kelvinToCelsius
+import com.example.androidweather.util.replaceElementFirstIsInstance
 import com.example.androidweather.util.toWeatherIconUrl
 import com.tbruyelle.rxpermissions3.RxPermissions
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -39,6 +40,13 @@ class MainActionProcessorHolder(
   private val searchHistoryRepository: SearchHistoryRepository,
   private val weatherRepository: WeatherRepository
 ) {
+
+  private val changeTempFormatProcessor: ObservableTransformer<
+      MainAction.ChangeTempFormatAction,
+      MainResult.ChangeTempFormatResult> =
+    ObservableTransformer { actions ->
+      actions.map { MainResult.ChangeTempFormatResult(it.isChecked) }
+    }
 
   private val dismissErrorProcessor: ObservableTransformer<
       MainAction.DismissErrorAction,
@@ -143,6 +151,44 @@ class MainActionProcessorHolder(
       MainResult,
       MainViewState> { preState, result ->
     when (result) {
+      is MainResult.ChangeTempFormatResult -> {
+        preState.copy(
+          controllerItems = preState.controllerItems
+            .toMutableList()
+            .replaceElementFirstIsInstance<
+                MainControllerItem,
+                MainControllerItem.WeatherItem> { weatherItem ->
+              weatherItem.copy(
+                tempStringResource = if (result.isChecked) {
+                  R.string.temperature_degree_fahrenheit
+                } else {
+                  R.string.temperature_degree_celsius
+                },
+                feelsLikeStringResource = if (result.isChecked) {
+                  R.string.feels_like_degree_fahrenheit
+                } else {
+                  R.string.feels_like_degree_celsius
+                },
+                highTempStringResource = if (result.isChecked) {
+                  R.string.degree_fahrenheit
+                } else {
+                  R.string.degree_celsius
+                },
+                lowTempStringResource = if (result.isChecked) {
+                  R.string.degree_fahrenheit
+                } else {
+                  R.string.degree_celsius
+                },
+                tempFormatStringResource = if (result.isChecked) {
+                  R.string.degree_fahrenheit
+                } else {
+                  R.string.degree_celsius
+                },
+                isTempFormatChecked = !result.isChecked
+              )
+            }
+        )
+      }
       is MainResult.DismissErrorResult -> {
         preState.copy(
           errorMessage = null
@@ -166,10 +212,16 @@ class MainActionProcessorHolder(
                   .firstOrNull()
                   ?.description
                   ?.capitalize(Locale.getDefault()) ?: "",
+                tempStringResource = R.string.temperature_degree_celsius,
                 temp = result.response.main.temp.kelvinToCelsius().toInt(),
+                feelsLikeStringResource = R.string.feels_like_degree_celsius,
                 feelsLike = result.response.main.feelsLike.kelvinToCelsius().toInt(),
+                highTempStringResource = R.string.degree_celsius,
                 highTemp = result.response.main.tempMax.kelvinToCelsius().toInt(),
-                lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt()
+                lowTempStringResource = R.string.degree_celsius,
+                lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt(),
+                tempFormatStringResource = R.string.degree_celsius,
+                isTempFormatChecked = true
               )
             )
           )
@@ -200,6 +252,7 @@ class MainActionProcessorHolder(
       }
       is MainResult.SearchCityResult -> when (result) {
         is MainResult.SearchCityResult.Success -> {
+          val preIsTempFormatChecked = preState.controllerItems.getIsTempFormatChecked()
           preState.copy(
             isLoading = false,
             controllerItems = listOf(
@@ -216,10 +269,36 @@ class MainActionProcessorHolder(
                   .firstOrNull()
                   ?.description
                   ?.capitalize(Locale.getDefault()) ?: "",
+                tempStringResource = if (preState.controllerItems.getIsTempFormatChecked()) {
+                  R.string.temperature_degree_celsius
+                } else {
+                  R.string.temperature_degree_fahrenheit
+                },
                 temp = result.response.main.temp.kelvinToCelsius().toInt(),
+                feelsLikeStringResource = if (preState.controllerItems.getIsTempFormatChecked()) {
+                  R.string.feels_like_degree_celsius
+                } else {
+                  R.string.feels_like_degree_fahrenheit
+                },
                 feelsLike = result.response.main.feelsLike.kelvinToCelsius().toInt(),
+                highTempStringResource = if (preIsTempFormatChecked) {
+                  R.string.degree_celsius
+                } else {
+                  R.string.degree_fahrenheit
+                },
                 highTemp = result.response.main.tempMax.kelvinToCelsius().toInt(),
-                lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt()
+                lowTempStringResource = if (preIsTempFormatChecked) {
+                  R.string.degree_celsius
+                } else {
+                  R.string.degree_fahrenheit
+                },
+                lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt(),
+                tempFormatStringResource = if (preIsTempFormatChecked) {
+                  R.string.degree_celsius
+                } else {
+                  R.string.degree_fahrenheit
+                },
+                isTempFormatChecked = preIsTempFormatChecked
               )
             )
           )
@@ -239,6 +318,7 @@ class MainActionProcessorHolder(
       }
       is MainResult.SearchLocationResult -> when (result) {
         is MainResult.SearchLocationResult.Success -> {
+          val preIsTempFormatChecked = preState.controllerItems.getIsTempFormatChecked()
           preState.copy(
             isLoading = false,
             controllerItems = listOf(
@@ -255,10 +335,36 @@ class MainActionProcessorHolder(
                   .firstOrNull()
                   ?.description
                   ?.capitalize(Locale.getDefault()) ?: "",
+                tempStringResource = if (preState.controllerItems.getIsTempFormatChecked()) {
+                  R.string.temperature_degree_celsius
+                } else {
+                  R.string.temperature_degree_fahrenheit
+                },
                 temp = result.response.main.temp.kelvinToCelsius().toInt(),
+                feelsLikeStringResource = if (preState.controllerItems.getIsTempFormatChecked()) {
+                  R.string.feels_like_degree_celsius
+                } else {
+                  R.string.feels_like_degree_fahrenheit
+                },
                 feelsLike = result.response.main.feelsLike.kelvinToCelsius().toInt(),
+                highTempStringResource = if (preIsTempFormatChecked) {
+                  R.string.degree_celsius
+                } else {
+                  R.string.degree_fahrenheit
+                },
                 highTemp = result.response.main.tempMax.kelvinToCelsius().toInt(),
-                lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt()
+                lowTempStringResource = if (preIsTempFormatChecked) {
+                  R.string.degree_celsius
+                } else {
+                  R.string.degree_fahrenheit
+                },
+                lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt(),
+                tempFormatStringResource = if (preIsTempFormatChecked) {
+                  R.string.degree_celsius
+                } else {
+                  R.string.degree_fahrenheit
+                },
+                isTempFormatChecked = preIsTempFormatChecked
               )
             )
           )
@@ -304,6 +410,8 @@ class MainActionProcessorHolder(
       MainViewState> { actions ->
     actions.publish { shared ->
       Observable.mergeArray<MainResult>(
+        shared.ofType(MainAction.ChangeTempFormatAction::class.java)
+          .compose(changeTempFormatProcessor),
         shared.ofType(MainAction.DismissErrorAction::class.java)
           .compose(dismissErrorProcessor),
         shared.ofType(MainAction.GetHistoryAction::class.java)
@@ -315,7 +423,8 @@ class MainActionProcessorHolder(
         shared.ofType(MainAction.SearchLocationAction::class.java)
           .compose(searchLocationProcessor),
         shared.filter {
-          it !is MainAction.DismissErrorAction
+          it !is MainAction.ChangeTempFormatAction
+              && it !is MainAction.DismissErrorAction
               && it !is MainAction.GetHistoryAction
               && it !is MainAction.HideKeyboardAction
               && it !is MainAction.SearchCityAction
