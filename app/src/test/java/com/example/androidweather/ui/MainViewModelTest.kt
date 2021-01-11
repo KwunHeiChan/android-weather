@@ -147,7 +147,7 @@ class MainViewModelTest {
           lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null
@@ -210,7 +210,7 @@ class MainViewModelTest {
           lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null
@@ -271,7 +271,7 @@ class MainViewModelTest {
           lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null
@@ -376,7 +376,7 @@ class MainViewModelTest {
           lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null
@@ -477,7 +477,7 @@ class MainViewModelTest {
           lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null
@@ -504,7 +504,7 @@ class MainViewModelTest {
           lowTempStringResource = R.string.temperature_degree_fahrenheit,
           lowTemp = 51,
           tempFormatStringResource = R.string.degree_fahrenheit,
-          isTempFormatChecked = false
+          isDegreeCelsius = false
         )
       )
           && it.errorMessage == null
@@ -531,7 +531,7 @@ class MainViewModelTest {
           lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null

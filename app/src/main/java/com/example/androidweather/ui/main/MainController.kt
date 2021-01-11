@@ -1,7 +1,6 @@
 package com.example.androidweather.ui.main
 
 import com.airbnb.epoxy.TypedEpoxyController
-import com.example.androidweather.R
 import com.example.androidweather.epoxy.tutorialView
 import com.example.androidweather.epoxy.weatherView
 import com.example.androidweather.util.KeyedListener
@@ -34,7 +33,7 @@ class MainController : TypedEpoxyController<List<MainControllerItem>>() {
             highTemp(controllerItem.highTempStringResource, controllerItem.highTemp)
             lowTemp(controllerItem.lowTempStringResource, controllerItem.lowTemp)
             tempFormat(controllerItem.tempFormatStringResource)
-            isTempFormatChecked(controllerItem.isTempFormatChecked)
+            isTempFormatChecked(controllerItem.isDegreeCelsius)
             tempFormatKeyedOnChangeListener(
               KeyedListener.create(
                 Unit,

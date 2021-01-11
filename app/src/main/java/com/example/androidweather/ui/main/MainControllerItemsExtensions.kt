@@ -14,4 +14,4 @@ fun List<MainControllerItem>.getCityName(): String =
  * if none is being displayed
  */
 fun List<MainControllerItem>.getIsTempFormatChecked(): Boolean =
-  filterIsInstance<MainControllerItem.WeatherItem>().firstOrNull()?.isTempFormatChecked ?: true
+  filterIsInstance<MainControllerItem.WeatherItem>().firstOrNull()?.isDegreeCelsius ?: true

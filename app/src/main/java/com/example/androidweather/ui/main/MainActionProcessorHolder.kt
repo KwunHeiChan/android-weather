@@ -205,7 +205,7 @@ class MainActionProcessorHolder(
                 } else {
                   R.string.degree_celsius
                 },
-                isTempFormatChecked = !result.isChecked
+                isDegreeCelsius = !result.isChecked
               )
             }
         )
@@ -246,7 +246,7 @@ class MainActionProcessorHolder(
                 lowTempStringResource = R.string.temperature_degree_celsius,
                 lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt(),
                 tempFormatStringResource = R.string.degree_celsius,
-                isTempFormatChecked = true
+                isDegreeCelsius = true
               )
             )
           )
@@ -327,7 +327,7 @@ class MainActionProcessorHolder(
                 } else {
                   R.string.degree_fahrenheit
                 },
-                isTempFormatChecked = preIsTempFormatChecked
+                isDegreeCelsius = preIsTempFormatChecked
               )
             )
           )
@@ -397,7 +397,7 @@ class MainActionProcessorHolder(
                 } else {
                   R.string.degree_fahrenheit
                 },
-                isTempFormatChecked = preIsTempFormatChecked
+                isDegreeCelsius = preIsTempFormatChecked
               )
             )
           )

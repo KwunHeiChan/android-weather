@@ -24,6 +24,6 @@ sealed class MainControllerItem {
     @StringRes val lowTempStringResource: Int,
     val lowTemp: Int,
     @StringRes val tempFormatStringResource: Int,
-    val isTempFormatChecked: Boolean
+    val isDegreeCelsius: Boolean
   ) : MainControllerItem()
 }
