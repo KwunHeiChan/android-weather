@@ -131,6 +131,10 @@ class MainViewModelTest {
           && it.controllerItems == listOf(
         MainControllerItem.WeatherItem(
           id = 1819729,
+          tempKelvin = 284.98,
+          feelsLikeKelvin = 281.86,
+          highTempKelvin = 285.37,
+          lowTempKelvin = 284.26,
           cityName = "Hong Kong",
           weatherIconUrl = "https://openweathermap.org/img/wn/03d@2x.png",
           weatherDescription = "Scattered clouds",
@@ -138,12 +142,12 @@ class MainViewModelTest {
           temp = 11,
           feelsLikeStringResource = R.string.feels_like_degree_celsius,
           feelsLike = 8,
-          highTempStringResource = R.string.degree_celsius,
+          highTempStringResource = R.string.temperature_degree_celsius,
           highTemp = 12,
-          lowTempStringResource = R.string.degree_celsius,
+          lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null
@@ -190,6 +194,10 @@ class MainViewModelTest {
           && it.controllerItems == listOf(
         MainControllerItem.WeatherItem(
           id = 1819729,
+          tempKelvin = 284.98,
+          feelsLikeKelvin = 281.86,
+          highTempKelvin = 285.37,
+          lowTempKelvin = 284.26,
           cityName = "Hong Kong",
           weatherIconUrl = "https://openweathermap.org/img/wn/03d@2x.png",
           weatherDescription = "Scattered clouds",
@@ -197,12 +205,12 @@ class MainViewModelTest {
           temp = 11,
           feelsLikeStringResource = R.string.feels_like_degree_celsius,
           feelsLike = 8,
-          highTempStringResource = R.string.degree_celsius,
+          highTempStringResource = R.string.temperature_degree_celsius,
           highTemp = 12,
-          lowTempStringResource = R.string.degree_celsius,
+          lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null
@@ -247,6 +255,10 @@ class MainViewModelTest {
           && it.controllerItems == listOf(
         MainControllerItem.WeatherItem(
           id = 1819729,
+          tempKelvin = 284.98,
+          feelsLikeKelvin = 281.86,
+          highTempKelvin = 285.37,
+          lowTempKelvin = 284.26,
           cityName = "Hong Kong",
           weatherIconUrl = "https://openweathermap.org/img/wn/03d@2x.png",
           weatherDescription = "Scattered clouds",
@@ -254,12 +266,12 @@ class MainViewModelTest {
           temp = 11,
           feelsLikeStringResource = R.string.feels_like_degree_celsius,
           feelsLike = 8,
-          highTempStringResource = R.string.degree_celsius,
+          highTempStringResource = R.string.temperature_degree_celsius,
           highTemp = 12,
-          lowTempStringResource = R.string.degree_celsius,
+          lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null
@@ -348,6 +360,10 @@ class MainViewModelTest {
           && it.controllerItems == listOf(
         MainControllerItem.WeatherItem(
           id = 1819729,
+          tempKelvin = 284.98,
+          feelsLikeKelvin = 281.86,
+          highTempKelvin = 285.37,
+          lowTempKelvin = 284.26,
           cityName = "Hong Kong",
           weatherIconUrl = "https://openweathermap.org/img/wn/03d@2x.png",
           weatherDescription = "Scattered clouds",
@@ -355,12 +371,12 @@ class MainViewModelTest {
           temp = 11,
           feelsLikeStringResource = R.string.feels_like_degree_celsius,
           feelsLike = 8,
-          highTempStringResource = R.string.degree_celsius,
+          highTempStringResource = R.string.temperature_degree_celsius,
           highTemp = 12,
-          lowTempStringResource = R.string.degree_celsius,
+          lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null
@@ -430,11 +446,12 @@ class MainViewModelTest {
     mainViewModel.processIntents(
       Observable.mergeArray(
         Observable.just(MainIntent.InitialIntent),
-        Observable.just(MainIntent.ChangeTempFormatIntent(true))
+        Observable.just(MainIntent.ChangeTempFormatIntent(true)),
+        Observable.just(MainIntent.ChangeTempFormatIntent(false))
       )
     )
 
-    assert(testObserver.values().size == 4)
+    assert(testObserver.values().size == 5)
     testObserver.assertValueAt(0, MainViewState.initial())
     testObserver.assertValueAt(1) {
       it.isLoading && it.controllerItems.isEmpty() && it.errorMessage == null && it.isHideKeyboard
@@ -444,6 +461,10 @@ class MainViewModelTest {
           && it.controllerItems == listOf(
         MainControllerItem.WeatherItem(
           id = 1819729,
+          tempKelvin = 284.98,
+          feelsLikeKelvin = 281.86,
+          highTempKelvin = 285.37,
+          lowTempKelvin = 284.26,
           cityName = "Hong Kong",
           weatherIconUrl = "https://openweathermap.org/img/wn/03d@2x.png",
           weatherDescription = "Scattered clouds",
@@ -451,12 +472,12 @@ class MainViewModelTest {
           temp = 11,
           feelsLikeStringResource = R.string.feels_like_degree_celsius,
           feelsLike = 8,
-          highTempStringResource = R.string.degree_celsius,
+          highTempStringResource = R.string.temperature_degree_celsius,
           highTemp = 12,
-          lowTempStringResource = R.string.degree_celsius,
+          lowTempStringResource = R.string.temperature_degree_celsius,
           lowTemp = 11,
           tempFormatStringResource = R.string.degree_celsius,
-          isTempFormatChecked = true
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null
@@ -467,19 +488,50 @@ class MainViewModelTest {
           && it.controllerItems == listOf(
         MainControllerItem.WeatherItem(
           id = 1819729,
+          tempKelvin = 284.98,
+          feelsLikeKelvin = 281.86,
+          highTempKelvin = 285.37,
+          lowTempKelvin = 284.26,
           cityName = "Hong Kong",
           weatherIconUrl = "https://openweathermap.org/img/wn/03d@2x.png",
           weatherDescription = "Scattered clouds",
           tempStringResource = R.string.temperature_degree_fahrenheit,
-          temp = 11,
+          temp = 53,
           feelsLikeStringResource = R.string.feels_like_degree_fahrenheit,
-          feelsLike = 8,
-          highTempStringResource = R.string.degree_fahrenheit,
-          highTemp = 12,
-          lowTempStringResource = R.string.degree_fahrenheit,
-          lowTemp = 11,
+          feelsLike = 47,
+          highTempStringResource = R.string.temperature_degree_fahrenheit,
+          highTemp = 53,
+          lowTempStringResource = R.string.temperature_degree_fahrenheit,
+          lowTemp = 51,
           tempFormatStringResource = R.string.degree_fahrenheit,
-          isTempFormatChecked = false
+          isDegreeCelsius = false
+        )
+      )
+          && it.errorMessage == null
+          && it.isHideKeyboard
+    }
+    testObserver.assertValueAt(4) {
+      !it.isLoading
+          && it.controllerItems == listOf(
+        MainControllerItem.WeatherItem(
+          id = 1819729,
+          tempKelvin = 284.98,
+          feelsLikeKelvin = 281.86,
+          highTempKelvin = 285.37,
+          lowTempKelvin = 284.26,
+          cityName = "Hong Kong",
+          weatherIconUrl = "https://openweathermap.org/img/wn/03d@2x.png",
+          weatherDescription = "Scattered clouds",
+          tempStringResource = R.string.temperature_degree_celsius,
+          temp = 11,
+          feelsLikeStringResource = R.string.feels_like_degree_celsius,
+          feelsLike = 8,
+          highTempStringResource = R.string.temperature_degree_celsius,
+          highTemp = 12,
+          lowTempStringResource = R.string.temperature_degree_celsius,
+          lowTemp = 11,
+          tempFormatStringResource = R.string.degree_celsius,
+          isDegreeCelsius = true
         )
       )
           && it.errorMessage == null

@@ -15,6 +15,7 @@ import com.example.androidweather.repository.LocationRepository
 import com.example.androidweather.repository.SearchHistoryRepository
 import com.example.androidweather.repository.WeatherRepository
 import com.example.androidweather.util.kelvinToCelsius
+import com.example.androidweather.util.kelvinToFahrenheit
 import com.example.androidweather.util.replaceElementFirstIsInstance
 import com.example.androidweather.util.toWeatherIconUrl
 import com.tbruyelle.rxpermissions3.RxPermissions
@@ -164,27 +165,47 @@ class MainActionProcessorHolder(
                 } else {
                   R.string.temperature_degree_celsius
                 },
+                temp = if (result.isChecked) {
+                  weatherItem.tempKelvin.kelvinToFahrenheit().toInt()
+                } else {
+                  weatherItem.tempKelvin.kelvinToCelsius().toInt()
+                },
                 feelsLikeStringResource = if (result.isChecked) {
                   R.string.feels_like_degree_fahrenheit
                 } else {
                   R.string.feels_like_degree_celsius
                 },
-                highTempStringResource = if (result.isChecked) {
-                  R.string.degree_fahrenheit
+                feelsLike = if (result.isChecked) {
+                  weatherItem.feelsLikeKelvin.kelvinToFahrenheit().toInt()
                 } else {
-                  R.string.degree_celsius
+                  weatherItem.feelsLikeKelvin.kelvinToCelsius().toInt()
+                },
+                highTempStringResource = if (result.isChecked) {
+                  R.string.temperature_degree_fahrenheit
+                } else {
+                  R.string.temperature_degree_celsius
+                },
+                highTemp = if (result.isChecked) {
+                  weatherItem.highTempKelvin.kelvinToFahrenheit().toInt()
+                } else {
+                  weatherItem.highTempKelvin.kelvinToCelsius().toInt()
                 },
                 lowTempStringResource = if (result.isChecked) {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 } else {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
+                },
+                lowTemp = if (result.isChecked) {
+                  weatherItem.lowTempKelvin.kelvinToFahrenheit().toInt()
+                } else {
+                  weatherItem.lowTempKelvin.kelvinToCelsius().toInt()
                 },
                 tempFormatStringResource = if (result.isChecked) {
                   R.string.degree_fahrenheit
                 } else {
                   R.string.degree_celsius
                 },
-                isTempFormatChecked = !result.isChecked
+                isDegreeCelsius = !result.isChecked
               )
             }
         )
@@ -201,6 +222,10 @@ class MainActionProcessorHolder(
             controllerItems = listOf(
               MainControllerItem.WeatherItem(
                 id = result.response.id,
+                tempKelvin = result.response.main.temp,
+                feelsLikeKelvin = result.response.main.feelsLike,
+                highTempKelvin = result.response.main.tempMax,
+                lowTempKelvin = result.response.main.tempMin,
                 cityName = result.response.name,
                 weatherIconUrl = result.response
                   .weather
@@ -216,12 +241,12 @@ class MainActionProcessorHolder(
                 temp = result.response.main.temp.kelvinToCelsius().toInt(),
                 feelsLikeStringResource = R.string.feels_like_degree_celsius,
                 feelsLike = result.response.main.feelsLike.kelvinToCelsius().toInt(),
-                highTempStringResource = R.string.degree_celsius,
+                highTempStringResource = R.string.temperature_degree_celsius,
                 highTemp = result.response.main.tempMax.kelvinToCelsius().toInt(),
-                lowTempStringResource = R.string.degree_celsius,
+                lowTempStringResource = R.string.temperature_degree_celsius,
                 lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt(),
                 tempFormatStringResource = R.string.degree_celsius,
-                isTempFormatChecked = true
+                isDegreeCelsius = true
               )
             )
           )
@@ -258,6 +283,10 @@ class MainActionProcessorHolder(
             controllerItems = listOf(
               MainControllerItem.WeatherItem(
                 id = result.response.id,
+                tempKelvin = result.response.main.temp,
+                feelsLikeKelvin = result.response.main.feelsLike,
+                highTempKelvin = result.response.main.tempMax,
+                lowTempKelvin = result.response.main.tempMin,
                 cityName = result.response.name,
                 weatherIconUrl = result.response
                   .weather
@@ -282,15 +311,15 @@ class MainActionProcessorHolder(
                 },
                 feelsLike = result.response.main.feelsLike.kelvinToCelsius().toInt(),
                 highTempStringResource = if (preIsTempFormatChecked) {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
                 } else {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 },
                 highTemp = result.response.main.tempMax.kelvinToCelsius().toInt(),
                 lowTempStringResource = if (preIsTempFormatChecked) {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
                 } else {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 },
                 lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt(),
                 tempFormatStringResource = if (preIsTempFormatChecked) {
@@ -298,7 +327,7 @@ class MainActionProcessorHolder(
                 } else {
                   R.string.degree_fahrenheit
                 },
-                isTempFormatChecked = preIsTempFormatChecked
+                isDegreeCelsius = preIsTempFormatChecked
               )
             )
           )
@@ -324,6 +353,10 @@ class MainActionProcessorHolder(
             controllerItems = listOf(
               MainControllerItem.WeatherItem(
                 id = result.response.id,
+                tempKelvin = result.response.main.temp,
+                feelsLikeKelvin = result.response.main.feelsLike,
+                highTempKelvin = result.response.main.tempMax,
+                lowTempKelvin = result.response.main.tempMin,
                 cityName = result.response.name,
                 weatherIconUrl = result.response
                   .weather
@@ -348,15 +381,15 @@ class MainActionProcessorHolder(
                 },
                 feelsLike = result.response.main.feelsLike.kelvinToCelsius().toInt(),
                 highTempStringResource = if (preIsTempFormatChecked) {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
                 } else {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 },
                 highTemp = result.response.main.tempMax.kelvinToCelsius().toInt(),
                 lowTempStringResource = if (preIsTempFormatChecked) {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
                 } else {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 },
                 lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt(),
                 tempFormatStringResource = if (preIsTempFormatChecked) {
@@ -364,7 +397,7 @@ class MainActionProcessorHolder(
                 } else {
                   R.string.degree_fahrenheit
                 },
-                isTempFormatChecked = preIsTempFormatChecked
+                isDegreeCelsius = preIsTempFormatChecked
               )
             )
           )

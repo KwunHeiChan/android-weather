@@ -8,6 +8,10 @@ sealed class MainControllerItem {
 
   data class WeatherItem(
     val id: Int,
+    val tempKelvin: Double,
+    val feelsLikeKelvin: Double,
+    val highTempKelvin: Double,
+    val lowTempKelvin: Double,
     val cityName: String,
     val weatherIconUrl: String,
     val weatherDescription: String,
@@ -20,6 +24,6 @@ sealed class MainControllerItem {
     @StringRes val lowTempStringResource: Int,
     val lowTemp: Int,
     @StringRes val tempFormatStringResource: Int,
-    val isTempFormatChecked: Boolean
+    val isDegreeCelsius: Boolean
   ) : MainControllerItem()
 }
