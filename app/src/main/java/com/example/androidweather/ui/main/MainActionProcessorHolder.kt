@@ -15,6 +15,7 @@ import com.example.androidweather.repository.LocationRepository
 import com.example.androidweather.repository.SearchHistoryRepository
 import com.example.androidweather.repository.WeatherRepository
 import com.example.androidweather.util.kelvinToCelsius
+import com.example.androidweather.util.kelvinToFahrenheit
 import com.example.androidweather.util.replaceElementFirstIsInstance
 import com.example.androidweather.util.toWeatherIconUrl
 import com.tbruyelle.rxpermissions3.RxPermissions
@@ -164,20 +165,40 @@ class MainActionProcessorHolder(
                 } else {
                   R.string.temperature_degree_celsius
                 },
+                temp = if (result.isChecked) {
+                  weatherItem.tempKelvin.kelvinToFahrenheit().toInt()
+                } else {
+                  weatherItem.tempKelvin.kelvinToCelsius().toInt()
+                },
                 feelsLikeStringResource = if (result.isChecked) {
                   R.string.feels_like_degree_fahrenheit
                 } else {
                   R.string.feels_like_degree_celsius
+                },
+                feelsLike = if (result.isChecked) {
+                  weatherItem.feelsLikeKelvin.kelvinToFahrenheit().toInt()
+                } else {
+                  weatherItem.feelsLikeKelvin.kelvinToCelsius().toInt()
                 },
                 highTempStringResource = if (result.isChecked) {
                   R.string.temperature_degree_fahrenheit
                 } else {
                   R.string.temperature_degree_celsius
                 },
+                highTemp = if (result.isChecked) {
+                  weatherItem.highTempKelvin.kelvinToFahrenheit().toInt()
+                } else {
+                  weatherItem.highTempKelvin.kelvinToCelsius().toInt()
+                },
                 lowTempStringResource = if (result.isChecked) {
                   R.string.temperature_degree_fahrenheit
                 } else {
                   R.string.temperature_degree_celsius
+                },
+                lowTemp = if (result.isChecked) {
+                  weatherItem.lowTempKelvin.kelvinToFahrenheit().toInt()
+                } else {
+                  weatherItem.lowTempKelvin.kelvinToCelsius().toInt()
                 },
                 tempFormatStringResource = if (result.isChecked) {
                   R.string.degree_fahrenheit
@@ -201,6 +222,10 @@ class MainActionProcessorHolder(
             controllerItems = listOf(
               MainControllerItem.WeatherItem(
                 id = result.response.id,
+                tempKelvin = result.response.main.temp,
+                feelsLikeKelvin = result.response.main.feelsLike,
+                highTempKelvin = result.response.main.tempMax,
+                lowTempKelvin = result.response.main.tempMin,
                 cityName = result.response.name,
                 weatherIconUrl = result.response
                   .weather
@@ -258,6 +283,10 @@ class MainActionProcessorHolder(
             controllerItems = listOf(
               MainControllerItem.WeatherItem(
                 id = result.response.id,
+                tempKelvin = result.response.main.temp,
+                feelsLikeKelvin = result.response.main.feelsLike,
+                highTempKelvin = result.response.main.tempMax,
+                lowTempKelvin = result.response.main.tempMin,
                 cityName = result.response.name,
                 weatherIconUrl = result.response
                   .weather
@@ -324,6 +353,10 @@ class MainActionProcessorHolder(
             controllerItems = listOf(
               MainControllerItem.WeatherItem(
                 id = result.response.id,
+                tempKelvin = result.response.main.temp,
+                feelsLikeKelvin = result.response.main.feelsLike,
+                highTempKelvin = result.response.main.tempMax,
+                lowTempKelvin = result.response.main.tempMin,
                 cityName = result.response.name,
                 weatherIconUrl = result.response
                   .weather

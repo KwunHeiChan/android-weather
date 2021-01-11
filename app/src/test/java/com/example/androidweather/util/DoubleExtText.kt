@@ -9,4 +9,9 @@ class DoubleExtText {
   fun kelvinToCelsius() {
     assertEquals(.0, 273.15.kelvinToCelsius(), .0)
   }
+
+  @Test
+  fun kelvinToFahrenheit() {
+    assertEquals(32.0, 273.15.kelvinToFahrenheit(), .0)
+  }
 }
