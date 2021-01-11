@@ -170,14 +170,14 @@ class MainActionProcessorHolder(
                   R.string.feels_like_degree_celsius
                 },
                 highTempStringResource = if (result.isChecked) {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 } else {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
                 },
                 lowTempStringResource = if (result.isChecked) {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 } else {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
                 },
                 tempFormatStringResource = if (result.isChecked) {
                   R.string.degree_fahrenheit
@@ -216,9 +216,9 @@ class MainActionProcessorHolder(
                 temp = result.response.main.temp.kelvinToCelsius().toInt(),
                 feelsLikeStringResource = R.string.feels_like_degree_celsius,
                 feelsLike = result.response.main.feelsLike.kelvinToCelsius().toInt(),
-                highTempStringResource = R.string.degree_celsius,
+                highTempStringResource = R.string.temperature_degree_celsius,
                 highTemp = result.response.main.tempMax.kelvinToCelsius().toInt(),
-                lowTempStringResource = R.string.degree_celsius,
+                lowTempStringResource = R.string.temperature_degree_celsius,
                 lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt(),
                 tempFormatStringResource = R.string.degree_celsius,
                 isTempFormatChecked = true
@@ -282,15 +282,15 @@ class MainActionProcessorHolder(
                 },
                 feelsLike = result.response.main.feelsLike.kelvinToCelsius().toInt(),
                 highTempStringResource = if (preIsTempFormatChecked) {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
                 } else {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 },
                 highTemp = result.response.main.tempMax.kelvinToCelsius().toInt(),
                 lowTempStringResource = if (preIsTempFormatChecked) {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
                 } else {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 },
                 lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt(),
                 tempFormatStringResource = if (preIsTempFormatChecked) {
@@ -348,15 +348,15 @@ class MainActionProcessorHolder(
                 },
                 feelsLike = result.response.main.feelsLike.kelvinToCelsius().toInt(),
                 highTempStringResource = if (preIsTempFormatChecked) {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
                 } else {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 },
                 highTemp = result.response.main.tempMax.kelvinToCelsius().toInt(),
                 lowTempStringResource = if (preIsTempFormatChecked) {
-                  R.string.degree_celsius
+                  R.string.temperature_degree_celsius
                 } else {
-                  R.string.degree_fahrenheit
+                  R.string.temperature_degree_fahrenheit
                 },
                 lowTemp = result.response.main.tempMin.kelvinToCelsius().toInt(),
                 tempFormatStringResource = if (preIsTempFormatChecked) {
