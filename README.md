@@ -1,4 +1,4 @@
-# AndroidAppStore
+# AndroidWeather
 Android weather demo app using OpenWeatherMap API and MVI architecture
 
 ### Architecture
