@@ -4,23 +4,22 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.androidweather.R
 import com.example.androidweather.databinding.ActivityHistoryBinding
-import com.example.androidweather.mvi.MviIntent
-import com.example.androidweather.mvi.MviView
-import com.example.androidweather.mvi.MviViewModel
-import com.example.androidweather.mvi.MviViewState
-import com.example.androidweather.viewmodel.HistoryViewModelFactory
+import com.example.androidweather.mvvm.MvvmView
+import com.example.androidweather.mvvm.MvvmViewModel
+import com.example.androidweather.util.preventMultipleClicks
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding4.material.dismisses
 import dagger.android.support.DaggerAppCompatActivity
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class HistoryActivity : DaggerAppCompatActivity(), MviView<HistoryIntent, HistoryViewState> {
+class HistoryActivity : DaggerAppCompatActivity(), MvvmView<HistoryViewModel, HistoryViewState> {
 
   @Inject
   lateinit var controller: HistoryController
@@ -29,14 +28,14 @@ class HistoryActivity : DaggerAppCompatActivity(), MviView<HistoryIntent, Histor
   lateinit var disposables: CompositeDisposable
 
   @Inject
-  lateinit var viewModelFactory: HistoryViewModelFactory
+  lateinit var viewModelFactory: ViewModelProvider.Factory
 
   private lateinit var binding: ActivityHistoryBinding
 
   private lateinit var snackbar: Snackbar
 
-  private val viewModel: HistoryViewModel by lazy {
-    ViewModelProvider(this, viewModelFactory).get(HistoryViewModel::class.java)
+  private val viewModel: HistoryViewModel by viewModels {
+    viewModelFactory
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,21 +47,14 @@ class HistoryActivity : DaggerAppCompatActivity(), MviView<HistoryIntent, Histor
 
     bind()
     initView()
+
+    viewModel.getSearchHistory()
   }
 
   override fun onDestroy() {
     super.onDestroy()
     disposables.dispose()
   }
-
-  /**
-   * Merge all [MviIntent]s to be processed by [MviViewModel]
-   */
-  override fun intents(): Observable<HistoryIntent> = Observable.merge(
-    dismissErrorIntent(),
-    initialIntent(),
-    removeSearchHistoryIntent()
-  )
 
   override fun render(state: HistoryViewState) {
     binding.progressBar.visibility = if (state.isLoading) View.VISIBLE else View.INVISIBLE
@@ -75,17 +67,12 @@ class HistoryActivity : DaggerAppCompatActivity(), MviView<HistoryIntent, Histor
     controller.setData(state.controllerItems)
   }
 
-  /**
-   * Connect the [MviView] with the [MviViewModel].
-   * We subscribe to the [MviViewModel] before passing it the [MviView]'s [MviIntent]s.
-   * If we were to pass [MviIntent]s to the [MviViewModel] before listening to it,
-   * emitted [MviViewState]s could be lost.
-   */
+  /** Connect the [MvvmView] with the [MvvmViewModel]. */
   private fun bind() {
     // Subscribe to the ViewModel and call render for every emitted state
-    disposables += viewModel.states().subscribe(this::render)
-    // Pass the UI's intents to the ViewModel
-    viewModel.processIntents(intents())
+    viewModel.viewStateLiveData().observe(this, Observer {
+      render(it)
+    })
   }
 
   private fun initView() {
@@ -97,21 +84,15 @@ class HistoryActivity : DaggerAppCompatActivity(), MviView<HistoryIntent, Histor
     }
 
     binding.recyclerView.setController(controller)
+
+    disposables += controller.btnRemoveClickRelay
+      .preventMultipleClicks()
+      .subscribe {
+        viewModel.removeSearchHistory(it)
+      }
+
+    disposables += snackbar.dismisses().subscribe { viewModel.dismissError() }
   }
-
-  private fun dismissErrorIntent(): Observable<HistoryIntent.DismissErrorIntent> =
-    snackbar.dismisses().map { HistoryIntent.DismissErrorIntent }
-
-  /**
-   * The initial [MviIntent] the [MviView] emit to be converted to [MviViewModel]
-   * This initial Intent is also used to pass any parameters the [MviViewModel] might need
-   * to render the initial [MviViewState]
-   */
-  private fun initialIntent(): Observable<HistoryIntent.InitialIntent> =
-    Observable.just(HistoryIntent.InitialIntent)
-
-  private fun removeSearchHistoryIntent(): Observable<HistoryIntent.RemoveSearchHistoryIntent> =
-    controller.btnRemoveClickRelay.map { HistoryIntent.RemoveSearchHistoryIntent(it) }
 
   companion object {
     fun newIntent(context: Context): Intent {

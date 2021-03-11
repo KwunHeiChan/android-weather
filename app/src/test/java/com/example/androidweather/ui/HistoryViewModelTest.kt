@@ -1,17 +1,15 @@
 package com.example.androidweather.ui
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.androidweather.RxImmediateSchedulerRule
+import com.example.androidweather.TestObserver
 import com.example.androidweather.db.City
 import com.example.androidweather.db.CityDao
 import com.example.androidweather.repository.SearchHistoryRepository
-import com.example.androidweather.ui.history.HistoryActionProcessorHolder
 import com.example.androidweather.ui.history.HistoryControllerItem
-import com.example.androidweather.ui.history.HistoryIntent
 import com.example.androidweather.ui.history.HistoryViewModel
 import com.example.androidweather.ui.history.HistoryViewState
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.observers.TestObserver
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -21,8 +19,6 @@ import org.mockito.Mockito.anyInt
 import org.mockito.MockitoAnnotations
 
 class HistoryViewModelTest {
-
-  private lateinit var historyActionProcessorHolder: HistoryActionProcessorHolder
 
   private lateinit var historyViewModel: HistoryViewModel
 
@@ -35,7 +31,11 @@ class HistoryViewModelTest {
 
   @Rule
   @JvmField
-  val scheduler = RxImmediateSchedulerRule()
+  val instantExecutorRule = InstantTaskExecutorRule()
+
+  @Rule
+  @JvmField
+  val rxImmediateSchedulerRule = RxImmediateSchedulerRule()
 
   @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
   @Before
@@ -43,13 +43,14 @@ class HistoryViewModelTest {
     MockitoAnnotations.openMocks(this)
 
     searchHistoryRepository = SearchHistoryRepository(cityDao)
-    historyActionProcessorHolder = HistoryActionProcessorHolder(searchHistoryRepository)
-    historyViewModel = HistoryViewModel(historyActionProcessorHolder)
-    testObserver = historyViewModel.states().test()
+    historyViewModel = HistoryViewModel(searchHistoryRepository) { true }
+    testObserver = TestObserver<HistoryViewState>().also {
+      historyViewModel.viewStateLiveData().observeForever(it)
+    }
   }
 
   @Test
-  fun initialIntent_getSearchHistory_success() {
+  fun getSearchHistory_success() {
     `when`(cityDao.getAll())
       .thenReturn(
         Single.just(
@@ -68,7 +69,7 @@ class HistoryViewModelTest {
         )
       )
 
-    historyViewModel.processIntents(Observable.just(HistoryIntent.InitialIntent))
+    historyViewModel.getSearchHistory()
 
     assert(testObserver.values().size == 3)
     testObserver.assertValueAt(0, HistoryViewState.initial())
@@ -92,11 +93,11 @@ class HistoryViewModelTest {
   }
 
   @Test
-  fun initialIntent_getSearchHistory_failure() {
+  fun getSearchHistory_failure() {
     `when`(cityDao.getAll())
       .thenReturn(Single.error(Exception(errorMessage)))
 
-    historyViewModel.processIntents(Observable.just(HistoryIntent.InitialIntent))
+    historyViewModel.getSearchHistory()
 
     assert(testObserver.values().size == 3)
     testObserver.assertValueAt(0, HistoryViewState.initial())
@@ -111,7 +112,7 @@ class HistoryViewModelTest {
   }
 
   @Test
-  fun removeSearchHistoryIntent_success() {
+  fun removeSearchHistory_success() {
     `when`(cityDao.getAll())
       .thenReturn(
         Single.just(
@@ -142,12 +143,8 @@ class HistoryViewModelTest {
       )
     `when`(cityDao.deleteCityById(anyInt())).thenReturn(Single.just(1))
 
-    historyViewModel.processIntents(
-      Observable.mergeArray(
-        Observable.just(HistoryIntent.InitialIntent),
-        Observable.just(HistoryIntent.RemoveSearchHistoryIntent(id = 1))
-      )
-    )
+    historyViewModel.getSearchHistory()
+    historyViewModel.removeSearchHistory(id = 1)
 
     assert(testObserver.values().size == 5)
     testObserver.assertValueAt(0, HistoryViewState.initial())
@@ -195,7 +192,7 @@ class HistoryViewModelTest {
   }
 
   @Test
-  fun removeSearchHistoryIntent_failure() {
+  fun removeSearchHistory_failure() {
     `when`(cityDao.getAll())
       .thenReturn(
         Single.just(
@@ -215,12 +212,8 @@ class HistoryViewModelTest {
       )
     `when`(cityDao.deleteCityById(anyInt())).thenReturn(Single.error(Exception(errorMessage)))
 
-    historyViewModel.processIntents(
-      Observable.mergeArray(
-        Observable.just(HistoryIntent.InitialIntent),
-        Observable.just(HistoryIntent.RemoveSearchHistoryIntent(id = 1))
-      )
-    )
+    historyViewModel.getSearchHistory()
+    historyViewModel.removeSearchHistory(id = 1)
 
     assert(testObserver.values().size == 5)
     testObserver.assertValueAt(0, HistoryViewState.initial())
@@ -272,16 +265,12 @@ class HistoryViewModelTest {
   }
 
   @Test
-  fun dismissErrorIntent() {
+  fun dismissError() {
     `when`(cityDao.getAll())
       .thenReturn(Single.error(Exception(errorMessage)))
 
-    historyViewModel.processIntents(
-      Observable.mergeArray(
-        Observable.just(HistoryIntent.InitialIntent),
-        Observable.just(HistoryIntent.DismissErrorIntent)
-      )
-    )
+    historyViewModel.getSearchHistory()
+    historyViewModel.dismissError()
 
     assert(testObserver.values().size == 4)
     testObserver.assertValueAt(0, HistoryViewState.initial())

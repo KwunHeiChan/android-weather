@@ -3,6 +3,7 @@ package com.example.androidweather.di
 import android.app.Application
 import android.content.Context
 import android.location.LocationManager
+import android.os.Looper
 import androidx.core.content.ContextCompat
 import androidx.room.Room
 import com.chuckerteam.chucker.api.ChuckerInterceptor
@@ -95,4 +96,8 @@ open class AppModule {
   @Singleton
   @Provides
   fun provideCityDao(appDatabase: AppDatabase) = appDatabase.cityDao()
+
+  @Singleton
+  @Provides
+  fun provideIsMainLooper(): () -> Boolean = { Looper.myLooper() == Looper.getMainLooper() }
 }

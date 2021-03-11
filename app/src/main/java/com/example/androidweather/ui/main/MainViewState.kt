@@ -1,13 +1,13 @@
 package com.example.androidweather.ui.main
 
-import com.example.androidweather.mvi.MviViewState
+import com.example.androidweather.mvvm.MvvmViewState
 
 data class MainViewState(
   val isLoading: Boolean,
   val controllerItems: List<MainControllerItem>,
   val errorMessage: String?,
   val isHideKeyboard: Boolean
-) : MviViewState {
+) : MvvmViewState {
 
   companion object {
     fun initial(): MainViewState {

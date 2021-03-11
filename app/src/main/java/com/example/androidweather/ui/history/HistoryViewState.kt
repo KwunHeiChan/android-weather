@@ -1,12 +1,12 @@
 package com.example.androidweather.ui.history
 
-import com.example.androidweather.mvi.MviViewState
+import com.example.androidweather.mvvm.MvvmViewState
 
 data class HistoryViewState(
   val isLoading: Boolean,
   val controllerItems: List<HistoryControllerItem>,
   val errorMessage: String?
-) : MviViewState {
+) : MvvmViewState {
 
   companion object {
     fun initial(): HistoryViewState {

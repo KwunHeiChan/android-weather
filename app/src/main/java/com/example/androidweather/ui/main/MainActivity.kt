@@ -3,29 +3,27 @@ package com.example.androidweather.ui.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.androidweather.R
 import com.example.androidweather.coordinator.HistoryFlowCoordinator
 import com.example.androidweather.databinding.ActivityMainBinding
-import com.example.androidweather.mvi.MviIntent
-import com.example.androidweather.mvi.MviView
-import com.example.androidweather.mvi.MviViewModel
-import com.example.androidweather.mvi.MviViewState
+import com.example.androidweather.mvvm.MvvmView
+import com.example.androidweather.mvvm.MvvmViewModel
 import com.example.androidweather.util.hideSoftInput
-import com.example.androidweather.viewmodel.MainViewModelFactory
+import com.example.androidweather.util.preventMultipleClicks
 import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding4.appcompat.queryTextChangeEvents
 import com.jakewharton.rxbinding4.material.dismisses
 import com.jakewharton.rxbinding4.swiperefreshlayout.refreshes
-import com.jakewharton.rxrelay3.PublishRelay
 import com.tbruyelle.rxpermissions3.RxPermissions
 import dagger.android.support.DaggerAppCompatActivity
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity(), MviView<MainIntent, MainViewState> {
+class MainActivity : DaggerAppCompatActivity(), MvvmView<MainViewModel, MainViewState> {
 
   @Inject
   lateinit var controller: MainController
@@ -40,7 +38,7 @@ class MainActivity : DaggerAppCompatActivity(), MviView<MainIntent, MainViewStat
   lateinit var rxPermissions: RxPermissions
 
   @Inject
-  lateinit var viewModelFactory: MainViewModelFactory
+  lateinit var viewModelFactory: ViewModelProvider.Factory
 
   private lateinit var binding: ActivityMainBinding
 
@@ -48,14 +46,8 @@ class MainActivity : DaggerAppCompatActivity(), MviView<MainIntent, MainViewStat
 
   private lateinit var viewState: MainViewState
 
-  private val hideKeyboardRelay: PublishRelay<MainIntent.HideKeyboardIntent> =
-    PublishRelay.create<MainIntent.HideKeyboardIntent>()
-
-  private val searchLocationRelay: PublishRelay<MainIntent.SearchLocationIntent> =
-    PublishRelay.create<MainIntent.SearchLocationIntent>()
-
-  private val viewModel: MainViewModel by lazy {
-    ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+  private val viewModel: MainViewModel by viewModels {
+    viewModelFactory
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +59,8 @@ class MainActivity : DaggerAppCompatActivity(), MviView<MainIntent, MainViewStat
 
     bind()
     initView()
+
+    viewModel.getHistory()
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -77,7 +71,7 @@ class MainActivity : DaggerAppCompatActivity(), MviView<MainIntent, MainViewStat
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
       R.id.action_location -> {
-        searchLocationRelay.accept(MainIntent.SearchLocationIntent)
+        viewModel.searchLocation(rxPermissions)
       }
       R.id.action_history -> {
         historyFlowCoordinator.start()
@@ -90,19 +84,6 @@ class MainActivity : DaggerAppCompatActivity(), MviView<MainIntent, MainViewStat
     super.onDestroy()
     disposables.dispose()
   }
-
-  /**
-   * Merge all [MviIntent]s to be processed by [MviViewModel]
-   */
-  override fun intents(): Observable<MainIntent> = Observable.mergeArray(
-    changeTempFormatIntent(),
-    dismissErrorIntent(),
-    hideKeyboardIntent(),
-    initialIntent(),
-    refreshIntent(),
-    searchCityIntent(),
-    searchLocationIntent()
-  )
 
   override fun render(state: MainViewState) {
     /** Cache view state */
@@ -120,21 +101,16 @@ class MainActivity : DaggerAppCompatActivity(), MviView<MainIntent, MainViewStat
     if (state.isHideKeyboard) {
       binding.searchView.clearFocus()
       hideSoftInput()
-      hideKeyboardRelay.accept(MainIntent.HideKeyboardIntent)
+      viewModel.hideKeyboard()
     }
   }
 
-  /**
-   * Connect the [MviView] with the [MviViewModel].
-   * We subscribe to the [MviViewModel] before passing it the [MviView]'s [MviIntent]s.
-   * If we were to pass [MviIntent]s to the [MviViewModel] before listening to it,
-   * emitted [MviViewState]s could be lost.
-   */
+  /** Connect the [MvvmView] with the [MvvmViewModel]. */
   private fun bind() {
     // Subscribe to the ViewModel and call render for every emitted state
-    disposables += viewModel.states().subscribe(this::render)
-    // Pass the UI's intents to the ViewModel
-    viewModel.processIntents(intents())
+    viewModel.viewStateLiveData().observe(this, Observer {
+      render(it)
+    })
   }
 
   private fun initView() {
@@ -145,35 +121,26 @@ class MainActivity : DaggerAppCompatActivity(), MviView<MainIntent, MainViewStat
     }
 
     binding.recyclerView.setController(controller)
-  }
 
-  private fun changeTempFormatIntent(): Observable<MainIntent.ChangeTempFormatIntent> =
-    controller.tempFormatChangeRelay.map { MainIntent.ChangeTempFormatIntent(it) }
+    disposables += controller.tempFormatChangeRelay
+      .preventMultipleClicks()
+      .subscribe {
+        viewModel.changeTempFormat(it)
+      }
 
-  private fun dismissErrorIntent(): Observable<MainIntent.DismissErrorIntent> =
-    snackbar.dismisses().map { MainIntent.DismissErrorIntent }
+    disposables += snackbar.dismisses().subscribe { viewModel.dismissError() }
 
-  private fun hideKeyboardIntent(): Observable<MainIntent.HideKeyboardIntent> = hideKeyboardRelay
-
-  /**
-   * The initial [MviIntent] the [MviView] emit to be converted to [MviViewModel]
-   * This initial Intent is also used to pass any parameters the [MviViewModel] might need
-   * to render the initial [MviViewState]
-   */
-  private fun initialIntent(): Observable<MainIntent.InitialIntent> =
-    Observable.just(MainIntent.InitialIntent)
-
-  private fun refreshIntent(): Observable<MainIntent.RefreshIntent> =
-    binding.swipeRefreshLayout
+    disposables += binding.swipeRefreshLayout
       .refreshes()
-      .map { MainIntent.RefreshIntent(viewState.controllerItems.getCityName()) }
+      .subscribe {
+        viewModel.searchCity(viewState.controllerItems.getCityName())
+      }
 
-  private fun searchCityIntent(): Observable<MainIntent.SearchCityIntent> =
-    binding.searchView
+    disposables += binding.searchView
       .queryTextChangeEvents()
       .filter { it.isSubmitted }
-      .map { MainIntent.SearchCityIntent(it.queryText.toString()) }
-
-  private fun searchLocationIntent(): Observable<MainIntent.SearchLocationIntent> =
-    searchLocationRelay
+      .subscribe {
+        viewModel.searchCity(it.queryText.toString())
+      }
+  }
 }
