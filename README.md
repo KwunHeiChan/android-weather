@@ -1,13 +1,11 @@
 # AndroidWeather
-Android weather demo app using OpenWeatherMap API and MVI architecture
+Android weather demo app using OpenWeatherMap API and MVVM architecture
 
 ### Architecture
-This project is based on the MVI(Model-View-Intent) architecture, here are some useful resources for you to better understand the architecture:
-* [https://github.com/oldergod/android-architecture](https://github.com/oldergod/android-architecture)
-* [http://hannesdorfmann.com/android/mosby3-mvi-1](http://hannesdorfmann.com/android/mosby3-mvi-1)
+This project is based on the MVVM(Model-View-ViewModel) architecture
 
 To visualize the architecture:
-![mvi](https://raw.githubusercontent.com/oldergod/android-architecture/todo-mvi-rxjava-kotlin/art/MVI_detail.png)
+![mvvm](https://raw.githubusercontent.com/oldergod/android-architecture/todo-mvi-rxjava-kotlin/art/MVI_global.png)
 
 ### Implementation
 This project is written in Kotlin and demonstrates usage of following tools/libraries:
