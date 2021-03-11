@@ -14,6 +14,18 @@ This project is written in Kotlin and demonstrates usage of following tools/libr
 * [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/)
 * [Epoxy](https://github.com/airbnb/epoxy)
 
+### Code metrics
+```
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+Kotlin                          46            238            109           1526
+XML                             16             48             10            643
+-------------------------------------------------------------------------------
+SUM:                            62            286            119           2169
+-------------------------------------------------------------------------------
+```
+
 ### License
     Copyright (C) 2020 KwunHeiChan
 
